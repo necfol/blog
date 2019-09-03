@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- <button onclick="getData()">button</button>
+  <script>
+    const sql0 = `query 
+  GetRecommendItemList($id: Int) {
+  getRecommendItemList(id: $id) {
+    itemId
+    itemName
+    mainImage
+  }
+}`
+    const sql1 = `{getItemInfo {
+  itemId
+    itemName
+    mainImage
+}}`
+    const sql2 = `query test($id: Int) {
+  getRecommendItemList(id: $id) {
+    itemId
+    itemName
+    mainImage
+  }
+  getItemInfo 
+      {
+        itemId
+        itemName
+        mainImage
+      }
+}
+
+query test2($id: Int) {
+  getRecommendItemList(id: $id) {
+    mainImage
+  }
+  getItemInfo 
+      {
+        mainImage
+      }
+}
+    `
+    const sql3 = `mutation test($item: ItemInput ) {
+      updateItemInfo(item: $item) {
+        itemId
+        itemName
+        mainImage
+        price
+        shopId
+        shopName
+      }
+    }`
+    function getData() {
+
+      fetch('/graphql', {
+        // fetch('/graphql?query=' + sql1, {
+        // method: 'GET',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query: sql2,
+          operationName: 'test',
+          variables: {
+            id: 124,
+            item: {
+              itemName: "房星星新添加的汽油"
+            }
+          }
+        })
+      })
+        .then(r => r.json())
+        .then(data => console.log('data returned:', data))
+    }
+
+  </script>
+ -->
+
+
+
+  <div id='test'>
+    测试
+  </div>
+  <form id="form">
+    <input type="file" name="img" accept="image/gif, image/jpeg, image/png" required />
+  </form>
+  <button type="button" id="btn">submit</button>
+  <script>
+    const btn = document.querySelector('#btn')
+    const form = document.querySelector('#form')
+    const sql3 = `mutation test($img: upload!) {uploadImg(img: $img) {url}}`
+    btn.addEventListener('click', () => {
+      const formData = new FormData(form)
+      formData.append(
+        'opts',
+        `{"query": "${sql3}", "variables": {}}`
+      )
+
+      fetch('/graphql', {
+        method: 'post',
+        body: formData,
+      })
+        .then(r => r.json())
+        .then(d => {
+          let a = document.createElement('a')
+          a.href = d.data.uploadImg.url
+          a.text = d.data.uploadImg.url
+          document.getElementById('test').appendChild(a)
+          console.log(d.data.uploadImg.url)
+        })
+        .catch(err => console.log(err))
+    })
+  </script>
+</body>
+
+</html>
